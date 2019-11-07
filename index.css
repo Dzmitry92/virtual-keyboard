@@ -3,22 +3,70 @@ body {
 }
 
 #root {
+    margin: 0 auto;
+    width: 850px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 #root .button {
     width: 50px;
     height: 50px;
-    background: lightblue;
-    border: 1px solid black;
+    color: white;
+    background: #3a424e;
+    border: 1px solid #3a424e;
+    border-radius: 3px;
+    outline: none;
 }
 
 #root .button.pressed {
     width: 50px;
     height: 50px;
-    background: blue;
+    background: #5571ee;
+    border: 1px solid #5571ee;
+}
+
+textarea {
+    margin: 5px 10px 0 10px ;
+    width: 98%;
+    height: 200px;
+    background-color: white;
     border: 1px solid black;
+}
+
+#root > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0;
+}
+
+#root > div:first-child > .button:last-child {
+    width: 120px;
+}
+
+#root > div:nth-child(2) > .button:first-child {
+    width: 70px;
+}
+
+#root > div:nth-child(3) > .button:first-child {
+    width: 110px;
+}
+
+#root > div:nth-child(3) > .button:last-child {
+    width: 100px;
+}
+
+#root > div:nth-child(4) > .button:first-child {
+    width: 110px;
+}
+
+#root > div:nth-child(5) > .button:nth-child(4) {
+    width: 400px;
+}
+
+@media (max-width: 1000px) {
+    #root {
+        width: 85%;
+    }
 }

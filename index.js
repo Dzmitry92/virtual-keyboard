@@ -93,8 +93,8 @@ const keyboard = [
 
         {
             '8':   {
-                en: 'backspace',
-                ru: 'backspace',
+                en: 'Backspace',
+                ru: 'Backspace',
             }
         },        
     ],
@@ -102,8 +102,8 @@ const keyboard = [
     [
         {
             '9':   {
-                en: 'tab',
-                ru: 'tab',
+                en: 'Tab',
+                ru: 'Tab',
             }
         },
 
@@ -190,12 +190,17 @@ const keyboard = [
                 ru: 'ъ',
             }
         },
+        {
+            '220':   {
+                en: '\\',
+                ru: '\\',
+            }
+        },
 
         {
-            '13':   {
-                other: 'Enter',
-                en: ' \n',
-                ru: ' \n',
+            '46':   {
+                en: 'Del',
+                ru: 'Del',
             }
         },
     ],
@@ -269,14 +274,170 @@ const keyboard = [
         },
         {
             '222':   {
-                en: '"',
+                en: "'",
                 ru: 'э',
             }
         },
         {
-            '220':   {
-                en: "",
-                ru: '',
+            '13':   {
+                en: '\n',
+                ru: '\n',
+            }
+        },
+    ],
+
+    [
+        {
+            '16':   {
+                en: 'Shift',
+                ru: 'Shift',
+            }
+        },
+
+        {
+            '226':   {
+                en: '\\',
+                ru: '\\',
+            }
+        },
+
+        {
+            '90':   {
+                en: 'z',
+                ru: 'я',
+            }
+        },
+
+        {
+            '88':   {
+                en: 'x',
+                ru: 'ч',
+            }
+        },
+
+        {
+            '67':   {
+                en: 'c',
+                ru: 'с',
+            }
+        },
+
+        {
+            '86':   {
+                en: 'v',
+                ru: 'м',
+            }
+        },
+
+        {
+            '66':   {
+                en: 'b',
+                ru: 'и',
+            }
+        },
+
+        {
+            '78':   {
+                en: 'n',
+                ru: 'т',
+            }
+        },
+
+        {
+            '77':   {
+                en: 'm',
+                ru: 'ь',
+            }
+        },
+
+        {
+            '188':   {
+                en: ',',
+                ru: 'б',
+            }
+        },
+
+        {
+            '190':   {
+                en: '.',
+                ru: 'ю',
+            }
+        },
+
+        {
+            '191':   {
+                en: '/',
+                ru: '.',
+            }
+        },
+
+        {
+            '38':   {
+                en: 'up'
+            }
+        },
+
+        {
+            '16':   {
+                en: 'Shift'
+            }
+        },
+    ],
+
+    [
+        {
+            '17':   {
+                en: 'Ctrl',
+                ru: 'Ctrl'
+            }
+        },
+        {
+            '91':   {
+                en: 'win',
+                ru: 'win'
+                
+            }
+        },
+        {
+            '18':   {
+                en: 'Alt',
+                ru: 'Alt'
+            }
+        },
+        {
+            '32':   {
+                en: ' ',
+                ru: ' '
+            }
+        },
+        {
+            '18':   {
+                en: 'Alt',
+                ru: 'Alt'
+            }
+        },
+        {
+            '17':   {
+                en: 'Ctrl',
+                ru: 'Ctrl'
+            }
+        },
+        {
+            '37':   {
+                en: 'left',
+                ru: 'left'
+            }
+        },
+        {
+            '40':   {
+                en: 'down',
+                ru: 'down'
+            }
+        },
+        {
+            '39':   {
+                en: 'right',
+                ru: 'right'
             }
         },
     ]
@@ -284,20 +445,21 @@ const keyboard = [
 
 let currentLang = 'en';
 
-const root = document.getElementById('root');
-
 const input = document.createElement('textarea');
+
+const root = document.getElementById('root');
 
 input.id = 'keyboard-input';
 input.disabled = true;
 document.body.appendChild(input);
+document.getElementsByClassName('button');
 
 root.addEventListener('click', function(e) {
-    
+
     if (e.target.tagName === 'BUTTON') {
-        const value = e.target.getAttribute('fff');
+        const value = e.target.getAttribute('uniqueAttribute');
         input.value += value;
-    }
+    };
 });
 
 document.addEventListener('keydown', function(e) {
@@ -312,7 +474,7 @@ document.addEventListener('keydown', function(e) {
         if (e.keyCode === 8) {
             input.value = input.value.slice(0, input.value.length - 1);
         } else {
-            const value = pressedButton.getAttribute('fff');
+            const value = pressedButton.getAttribute('uniqueAttribute');
             input.value += value;
         }
     
@@ -328,18 +490,19 @@ document.addEventListener('keyup', function(e) {
    
 
 keyboard.forEach(function(row) {
-    const rowWraper= document.createElement('div');
+    const rowWraper = document.createElement('div');
 
 
     row.forEach(function(buttonObj) {
         const key = Object.keys(buttonObj)[0];
         const button = document.createElement('button');
         button.id = key;
-        button.setAttribute('fff', buttonObj[key][currentLang]);
+        button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
         button.classList.add('button');
         button.innerHTML = buttonObj[key][currentLang];
         rowWraper.appendChild(button);
     });
+
     root.appendChild(rowWraper);
 
 });
