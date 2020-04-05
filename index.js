@@ -110,6 +110,7 @@ const keyboard = [
         {
             '81':   {
                 en: 'q',
+                sEn: 'Q',
                 ru: 'й',
             }
         },
@@ -117,6 +118,7 @@ const keyboard = [
         {
             '87':   {
                 en: 'w',
+                sEn: 'W',
                 ru: 'ц',
             }
         },
@@ -124,6 +126,7 @@ const keyboard = [
         {
             '69':   {
                 en: 'e',
+                sEn: 'E',
                 ru: 'у',
             }
         },
@@ -131,6 +134,7 @@ const keyboard = [
         {
             '82':   {
                 en: 'r',
+                sEn: 'R',
                 ru: 'к',
             }
         },
@@ -138,6 +142,7 @@ const keyboard = [
         {
             '84':   {
                 en: 't',
+                sEn: 'T',
                 ru: 'е',
             }
         },
@@ -207,10 +212,10 @@ const keyboard = [
 
     [
         {
-        '20':   {
-            en: 'CapsLock',
-            ru: 'CapsLock',
-            }
+            '20':   {
+                en: 'CapsLock',
+                ru: 'CapsLock',
+                }
         },
         {
             '65':   {
@@ -373,13 +378,15 @@ const keyboard = [
 
         {
             '38':   {
-                en: 'up'
+                en: 'up',
+                ru: 'up',
             }
         },
 
         {
             '16':   {
-                en: 'Shift'
+                en: 'Shift',
+                ru: 'Shift',
             }
         },
     ],
@@ -440,31 +447,33 @@ const keyboard = [
                 ru: 'right'
             }
         },
-    ]
+    ],
 ]
 
 let currentLang = 'en';
 
 const input = document.createElement('textarea');
-
-const root = document.getElementById('root');
-
+const root = document.createElement('div'); 
+root.id = 'root';
 input.id = 'keyboard-input';
 input.disabled = true;
-document.body.appendChild(input);
-document.getElementsByClassName('button');
+document.body.prepend(input);
+document.body.append(root);
 
-root.addEventListener('click', function(e) {
+document.addEventListener('click', function(e) {
 
-    if (e.target.tagName === 'BUTTON') {
-        const value = e.target.getAttribute('uniqueAttribute');
-        input.value += value;
-    };
+    if (e.target.tagName === 'BUTTON'){
+
+        if (e.target.id === '8') {
+            input.value = input.value.slice(0, input.value.length - 1);
+        } else {
+            const value = e.target.getAttribute('uniqueAttribute');
+            input.value += value;
+        }
+    }
 });
 
 document.addEventListener('keydown', function(e) {
-    
-    console.log(e.keyCode);
 
     const pressedButton = document.getElementById(e.keyCode);
 
@@ -473,7 +482,8 @@ document.addEventListener('keydown', function(e) {
 
         if (e.keyCode === 8) {
             input.value = input.value.slice(0, input.value.length - 1);
-        } else {
+        }
+        else {
             const value = pressedButton.getAttribute('uniqueAttribute');
             input.value += value;
         }
@@ -487,7 +497,6 @@ document.addEventListener('keyup', function(e) {
         pressedButton.classList.remove('pressed');
     }
 });
-   
 
 keyboard.forEach(function(row) {
     const rowWraper = document.createElement('div');
