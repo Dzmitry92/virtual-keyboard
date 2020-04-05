@@ -280,8 +280,8 @@ const keyboard = [
         },
         {
             '13':   {
-                en: '\n',
-                ru: '\n',
+                en: 'Enter',
+                ru: 'Enter',
             }
         },
     ],
@@ -445,34 +445,44 @@ const keyboard = [
     ],
 ]
 
-let currentLang = 'en';
-
+let currentLang = localStorage.getItem('lang') || 'en';
 const input = document.createElement('textarea');
 const root = document.createElement('div'); 
 root.id = 'root';
 input.id = 'keyboard-input';
+document.body.append(input);
+document.body.append(root);
 input.disabled = true;
-document.body.prepend(root);
-document.body.prepend(input);
 
-function addButtons () {
-    keyboard.forEach(function(row) {
-        const rowWraper = document.createElement('div');
-
-        row.forEach(function(buttonObj) {
-            const key = Object.keys(buttonObj)[0];
-            const button = document.createElement('button');
-            button.id = key;
-            button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
-            button.classList.add('button');
-            button.innerHTML = buttonObj[key][currentLang];
-            rowWraper.appendChild(button);
-        });
-        root.appendChild(rowWraper);
+keyboard.forEach(function(row) {
+    const rowWraper = document.createElement('div');
+    row.forEach(function(buttonObj) {
+        const key = Object.keys(buttonObj)[0];
+        const button = document.createElement('button');
+        button.id = key;
+        button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
+        button.classList.add('button');
+        button.innerHTML = buttonObj[key][currentLang];
+        rowWraper.appendChild(button);
     });
+    root.appendChild(rowWraper);
+});
+
+function switchLang() {
+    currentLang === 'en' ? currentLang = 'ru' : currentLang = 'en';
+    localStorage.setItem('lang', currentLang);
 }
 
-addButtons();
+function updateKeys() {
+    keyboard.forEach(function(row) {
+        row.forEach(function(buttonObj) {
+            const key = Object.keys(buttonObj)[0];
+            const button = document.getElementById(key);
+            button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
+            button.innerHTML = buttonObj[key][currentLang];
+        })
+    })
+}
 
 document.addEventListener('click', function(e) {
 
@@ -480,10 +490,15 @@ document.addEventListener('click', function(e) {
 
         if (e.target.id === '8') {
             input.value = input.value.slice(0, input.value.length - 1);
-        } else {
-            const value = e.target.getAttribute('uniqueAttribute');
+        }
+
+        if (e.target.id === '13'){
+            const value = '\n';
             input.value += value;
         }
+
+        const value = e.target.getAttribute('uniqueAttribute');
+        input.value += value;
     }
 });
 
@@ -496,30 +511,51 @@ document.addEventListener('mousedown', function(e){
     }
 });
 
-document.addEventListener('mouseup', () =>{
+document.addEventListener('mouseup', function(){
     const endPressed = document.querySelector('.pressed');
     if(endPressed === null){
-        return 0;
+        return;
     }
-    else {endPressed.classList.remove('pressed');}
+    endPressed.classList.remove('pressed');
 });
 
 document.addEventListener('keydown', function(e) {
-
-    console.log(e.keyCode);
-
+    e.preventDefault();
     const pressedButton = document.getElementById(e.keyCode);
 
     if (pressedButton !== null) {
+
         pressedButton.classList.add('pressed');
 
+        // if Backspace
         if (e.keyCode === 8) {
             input.value = input.value.slice(0, input.value.length - 1);
+            return;
         }
-        else {
-            const value = pressedButton.getAttribute('uniqueAttribute');
+        
+        // if Enter
+        if (e.keyCode === 13) {
+            const value = '\n';
             input.value += value;
+            return;
         }
+
+         // if switchLang
+        if (e.keyCode === 16 || e.keyCode === 18) {
+          
+            const ctrl = document.getElementById('18');
+            const shift = document.getElementById('16');
+
+            if (e.keyCode === 16 && ctrl.className === 'button pressed' || e.keyCode === 18 && shift.className === 'button pressed') {
+                switchLang();
+                updateKeys();
+            }
+
+            return;
+        }
+
+        const value = pressedButton.getAttribute('uniqueAttribute');
+        input.value += value;
     }
 });
 
@@ -529,16 +565,3 @@ document.addEventListener('keyup', function(e) {
         pressedButton.classList.remove('pressed');
     }
 });
-
-const changerLang = document.getElementById('16');
-
-changerLang.onclick = function() {
-    if (currentLang === 'en'){
-        currentLang = 'ru';
-    }
-    else {
-        currentLang = 'en';
-    }
-    // rowWraper.remove();
-    addButtons();
-}
