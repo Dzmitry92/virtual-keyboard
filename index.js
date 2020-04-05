@@ -110,7 +110,6 @@ const keyboard = [
         {
             '81':   {
                 en: 'q',
-                sEn: 'Q',
                 ru: 'й',
             }
         },
@@ -118,7 +117,6 @@ const keyboard = [
         {
             '87':   {
                 en: 'w',
-                sEn: 'W',
                 ru: 'ц',
             }
         },
@@ -126,7 +124,6 @@ const keyboard = [
         {
             '69':   {
                 en: 'e',
-                sEn: 'E',
                 ru: 'у',
             }
         },
@@ -134,7 +131,6 @@ const keyboard = [
         {
             '82':   {
                 en: 'r',
-                sEn: 'R',
                 ru: 'к',
             }
         },
@@ -142,7 +138,6 @@ const keyboard = [
         {
             '84':   {
                 en: 't',
-                sEn: 'T',
                 ru: 'е',
             }
         },
@@ -457,8 +452,27 @@ const root = document.createElement('div');
 root.id = 'root';
 input.id = 'keyboard-input';
 input.disabled = true;
+document.body.prepend(root);
 document.body.prepend(input);
-document.body.append(root);
+
+function addButtons () {
+    keyboard.forEach(function(row) {
+        const rowWraper = document.createElement('div');
+
+        row.forEach(function(buttonObj) {
+            const key = Object.keys(buttonObj)[0];
+            const button = document.createElement('button');
+            button.id = key;
+            button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
+            button.classList.add('button');
+            button.innerHTML = buttonObj[key][currentLang];
+            rowWraper.appendChild(button);
+        });
+        root.appendChild(rowWraper);
+    });
+}
+
+addButtons();
 
 document.addEventListener('click', function(e) {
 
@@ -473,7 +487,26 @@ document.addEventListener('click', function(e) {
     }
 });
 
+document.addEventListener('mousedown', function(e){
+    if(e.target.tagName === 'BUTTON'){
+        const clickButton = document.getElementById(e.target.id);
+        if(clickButton !== null){
+            clickButton.classList.add('pressed');
+        }
+    }
+});
+
+document.addEventListener('mouseup', () =>{
+    const endPressed = document.querySelector('.pressed');
+    if(endPressed === null){
+        return 0;
+    }
+    else {endPressed.classList.remove('pressed');}
+});
+
 document.addEventListener('keydown', function(e) {
+
+    console.log(e.keyCode);
 
     const pressedButton = document.getElementById(e.keyCode);
 
@@ -487,7 +520,6 @@ document.addEventListener('keydown', function(e) {
             const value = pressedButton.getAttribute('uniqueAttribute');
             input.value += value;
         }
-    
     }
 });
 
@@ -498,20 +530,15 @@ document.addEventListener('keyup', function(e) {
     }
 });
 
-keyboard.forEach(function(row) {
-    const rowWraper = document.createElement('div');
+const changerLang = document.getElementById('16');
 
-
-    row.forEach(function(buttonObj) {
-        const key = Object.keys(buttonObj)[0];
-        const button = document.createElement('button');
-        button.id = key;
-        button.setAttribute('uniqueAttribute', buttonObj[key][currentLang]);
-        button.classList.add('button');
-        button.innerHTML = buttonObj[key][currentLang];
-        rowWraper.appendChild(button);
-    });
-
-    root.appendChild(rowWraper);
-
-});
+changerLang.onclick = function() {
+    if (currentLang === 'en'){
+        currentLang = 'ru';
+    }
+    else {
+        currentLang = 'en';
+    }
+    // rowWraper.remove();
+    addButtons();
+}
