@@ -525,14 +525,14 @@ document.addEventListener('click', function(e) {
             return;
         }
 
-        // if Shift mouse
-        if (e.target.id === '16' || e.target.id === '91'){
+        // if Shift / Ctrl / Alt / Win mouse
+        if (e.target.id === '16' || e.target.id === '91' || e.target.id === '18' || e.target.id === '17'){
             const value = '';
             input.value += value;
             return;
         }
 
-        //if Caps mouse
+        //if CupsLock mouse
         if(e.target.id === '20'){
             const activeCaps = document.getElementById('20');
             cups === false ? (shiftUpdateKeys(), activeCaps.classList.add('etherColor'), cups = true) : (updateKeys(), activeCaps.classList.remove('etherColor'), cups = false);
@@ -605,12 +605,13 @@ document.addEventListener('keydown', function(e) {
 
         //if Shift keyboard
         if (e.keyCode === 16) {
+            cups === false ? shiftUpdateKeys() : updateKeys();
             const value = '';
             input.value += value;
-            shiftUpdateKeys();
             return;
         }
 
+        //if CupsLock keyboard
         if(e.keyCode === 20) {
            const activeCaps = document.getElementById('20');
            cups === false ? activeCaps.classList.add('etherColor') : activeCaps.classList.remove('etherColor');
@@ -643,12 +644,13 @@ document.addEventListener('keyup', function(e) {
         }
 
         if (e.keyCode === 16) {
-            updateKeys();
+            cups === false ? updateKeys() : shiftUpdateKeys();
             return;
         }
 
         if (e.keyCode === 20) {
             capsUpdateKeys();
+            return;
         }
     }
 });
