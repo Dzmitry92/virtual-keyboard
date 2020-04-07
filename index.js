@@ -447,6 +447,7 @@ const keyboard = [
 
 // create DOM
 let currentLang = localStorage.getItem('lang') || 'en';
+let cups = false;
 const input = document.createElement('textarea');
 const root = document.createElement('div'); 
 root.id = 'root';
@@ -496,20 +497,9 @@ function shiftUpdateKeys() {
     })
 }
 
-// let cups = false;
-// console.log(cups);
-
-// function capsUpdateKeys(cupsLuck){
-//     if(cupsLuck === false){
-//         shiftUpdateKeys();
-//         cupsLuck = true;
-//     }
-//     else {
-//         updateKeys();
-//         cupsLuck = false;
-//     }
-//     return cupsLuck;
-// }
+function capsUpdateKeys(){
+    cups === false ? (shiftUpdateKeys(), cups = true) : (updateKeys(), cups = false);
+}
 
 document.addEventListener('click', function(e) {
 
@@ -521,6 +511,13 @@ document.addEventListener('click', function(e) {
             return;
         }
 
+        //if Tab mouse
+        if(e.target.id === '9'){
+            const value = '\t';
+            input.value += value;
+            return;
+        }
+
         // if Enter mouse
         if (e.target.id === '13'){
             const value = '\n';
@@ -529,7 +526,16 @@ document.addEventListener('click', function(e) {
         }
 
         // if Shift mouse
-        if (e.target.id === '16'){
+        if (e.target.id === '16' || e.target.id === '91'){
+            const value = '';
+            input.value += value;
+            return;
+        }
+
+        //if Caps mouse
+        if(e.target.id === '20'){
+            const activeCaps = document.getElementById('20');
+            cups === false ? (shiftUpdateKeys(), activeCaps.classList.add('etherColor'), cups = true) : (updateKeys(), activeCaps.classList.remove('etherColor'), cups = false);
             const value = '';
             input.value += value;
             return;
@@ -546,6 +552,7 @@ document.addEventListener('mousedown', function(e){
         if(e.target.id === '16') {
             shiftUpdateKeys();
         }
+
         clickButton.classList.add('pressed');
     }
 });
@@ -574,6 +581,13 @@ document.addEventListener('keydown', function(e) {
             input.value = input.value.slice(0, input.value.length - 1);
             return;
         }
+
+        //if Tab keyboard
+        if  (e.keyCode === 9){
+            const value = '\t';
+            input.value += value;
+            return;
+        }
         
         // if Enter keyboard
         if (e.keyCode === 13) {
@@ -582,13 +596,14 @@ document.addEventListener('keydown', function(e) {
             return;
         }
 
-        // if Caps / Ctrl / Alt keyboard
-        if (e.keyCode === 18 || e.keyCode === 17 || e.keyCode === 20) {
+        // if  Ctrl / Alt keyboard
+        if (e.keyCode === 18 || e.keyCode === 17 || e.keyCode === 91) {
             const value = '';
             input.value += value;
             return;
         }
 
+        //if Shift keyboard
         if (e.keyCode === 16) {
             const value = '';
             input.value += value;
@@ -596,7 +611,13 @@ document.addEventListener('keydown', function(e) {
             return;
         }
 
-
+        if(e.keyCode === 20) {
+           const activeCaps = document.getElementById('20');
+           cups === false ? activeCaps.classList.add('etherColor') : activeCaps.classList.remove('etherColor');
+           const value = '';
+           input.value += value;
+           return;
+        }
 
         const value = pressedButton.getAttribute('uniqueAttribute');
         input.value += value;
@@ -626,8 +647,8 @@ document.addEventListener('keyup', function(e) {
             return;
         }
 
-        // if (e.keyCode === 20) {
-        //     capsUpdateKeys(cups);
-        // }
+        if (e.keyCode === 20) {
+            capsUpdateKeys();
+        }
     }
 });
