@@ -20,7 +20,8 @@ keyboard.forEach((row) => {
     button.id = key;
     button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][0]);
     button.classList.add('button');
-    button.innerHTML = buttonObj[key][currentLang][0];
+    const [lower] = buttonObj[key][currentLang];
+    button.innerHTML = lower;
     rowWraper.appendChild(button);
   });
   root.appendChild(rowWraper);
@@ -28,7 +29,11 @@ keyboard.forEach((row) => {
 
 // language switching
 function switchLang() {
-  currentLang === 'en' ? currentLang = 'ru' : currentLang = 'en';
+  if (currentLang === 'en') {
+    currentLang = 'ru';
+  } else {
+    currentLang = 'en';
+  }
   localStorage.setItem('lang', currentLang);
 }
 
@@ -39,7 +44,8 @@ function updateKeys() {
       const key = Object.keys(buttonObj)[0];
       const button = document.getElementById(key);
       button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][0]);
-      button.innerHTML = buttonObj[key][currentLang][0];
+      const [lower] = buttonObj[key][currentLang];
+      button.innerHTML = lower;
     });
   });
 }
@@ -51,14 +57,21 @@ function shiftUpdateKeys() {
       const key = Object.keys(buttonObj)[0];
       const button = document.getElementById(key);
       button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][1]);
-      button.innerHTML = buttonObj[key][currentLang][1];
+      const [, upper] = buttonObj[key][currentLang];
+      button.innerHTML = upper;
     });
   });
 }
 
 // Switching the state of the CapsLock button
 function capsUpdateKeys() {
-  cups === false ? (shiftUpdateKeys(), cups = true) : (updateKeys(), cups = false);
+  if (cups === false) {
+    shiftUpdateKeys();
+    cups = true;
+  } else {
+    updateKeys();
+    cups = false;
+  }
 }
 
 // Add mouse events
@@ -94,7 +107,15 @@ document.addEventListener('click', (e) => {
     // if CupsLock mouse
     if (e.target.id === '20') {
       const activeCaps = document.getElementById('20');
-      cups === false ? (shiftUpdateKeys(), activeCaps.classList.add('etherColor'), cups = true) : (updateKeys(), activeCaps.classList.remove('etherColor'), cups = false);
+      if (cups === false) {
+        shiftUpdateKeys();
+        activeCaps.classList.add('etherColor');
+        cups = true;
+      } else {
+        updateKeys();
+        activeCaps.classList.remove('etherColor');
+        cups = false;
+      }
       const value = '';
       input.value += value;
       return;
@@ -164,7 +185,11 @@ document.addEventListener('keydown', (e) => {
 
     // if Shift keyboard
     if (e.keyCode === 16) {
-      cups === false ? shiftUpdateKeys() : updateKeys();
+      if (cups === false) {
+        shiftUpdateKeys();
+      } else {
+        updateKeys();
+      }
       const value = '';
       input.value += value;
       return;
@@ -173,7 +198,11 @@ document.addEventListener('keydown', (e) => {
     // if CupsLock keyboard
     if (e.keyCode === 20) {
       const activeCaps = document.getElementById('20');
-      cups === false ? activeCaps.classList.add('etherColor') : activeCaps.classList.remove('etherColor');
+      if (cups === false) {
+        activeCaps.classList.add('etherColor');
+      } else {
+        activeCaps.classList.remove('etherColor');
+      }
       const value = '';
       input.value += value;
       return;
@@ -202,7 +231,11 @@ document.addEventListener('keyup', (e) => {
     }
 
     if (e.keyCode === 16) {
-      cups === false ? updateKeys() : shiftUpdateKeys();
+      if (cups === false) {
+        updateKeys();
+      } else {
+        shiftUpdateKeys();
+      }
       return;
     }
 
