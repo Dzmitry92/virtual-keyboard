@@ -5,10 +5,13 @@ let currentLang = localStorage.getItem('lang') || 'en';
 let cups = false;
 const input = document.createElement('textarea');
 const root = document.createElement('div');
+const message = document.createElement('p');
 root.id = 'root';
 input.id = 'keyboard-input';
 document.body.append(input);
 document.body.append(root);
+document.body.append(message);
+message.innerHTML = 'Switch language: <span>ControlLeft + AltLeft</span>';
 input.disabled = true;
 
 // Creature DOM
@@ -18,9 +21,9 @@ keyboard.forEach((row) => {
     const key = Object.keys(buttonObj)[0];
     const button = document.createElement('button');
     button.id = key;
-    button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][0]);
-    button.classList.add('button');
     const [lower] = buttonObj[key][currentLang];
+    button.setAttribute('uniqueAttribute', lower);
+    button.classList.add('button');
     button.innerHTML = lower;
     rowWraper.appendChild(button);
   });
@@ -43,8 +46,8 @@ function updateKeys() {
     row.forEach((buttonObj) => {
       const key = Object.keys(buttonObj)[0];
       const button = document.getElementById(key);
-      button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][0]);
       const [lower] = buttonObj[key][currentLang];
+      button.setAttribute('uniqueAttribute', lower);
       button.innerHTML = lower;
     });
   });
@@ -56,8 +59,8 @@ function shiftUpdateKeys() {
     row.forEach((buttonObj) => {
       const key = Object.keys(buttonObj)[0];
       const button = document.getElementById(key);
-      button.setAttribute('uniqueAttribute', buttonObj[key][currentLang][1]);
       const [, upper] = buttonObj[key][currentLang];
+      button.setAttribute('uniqueAttribute', upper);
       button.innerHTML = upper;
     });
   });
@@ -77,6 +80,7 @@ function capsUpdateKeys() {
 // Add mouse events
 document.addEventListener('click', (e) => {
   if (e.target.tagName === 'BUTTON') {
+
     // if Backspace / Delete mouse
     if (e.target.id === '8' || e.target.id === '46') {
       input.value = input.value.slice(0, input.value.length - 1);
@@ -85,22 +89,19 @@ document.addEventListener('click', (e) => {
 
     // if Tab mouse
     if (e.target.id === '9') {
-      const value = '\t';
-      input.value += value;
+      input.value += '\t';
       return;
     }
 
     // if Enter mouse
     if (e.target.id === '13') {
-      const value = '\n';
-      input.value += value;
+      input.value += '\n';
       return;
     }
 
     // if Shift / Ctrl / Alt / Win mouse
     if (e.target.id === '16' || e.target.id === '91' || e.target.id === '18' || e.target.id === '17') {
-      const value = '';
-      input.value += value;
+      input.value += '';
       return;
     }
 
@@ -116,8 +117,7 @@ document.addEventListener('click', (e) => {
         activeCaps.classList.remove('etherColor');
         cups = false;
       }
-      const value = '';
-      input.value += value;
+      input.value += '';
       return;
     }
 
@@ -164,22 +164,19 @@ document.addEventListener('keydown', (e) => {
 
     // if Tab keyboard
     if (e.keyCode === 9) {
-      const value = '\t';
-      input.value += value;
+      input.value += '\t';
       return;
     }
 
     // if Enter keyboard
     if (e.keyCode === 13) {
-      const value = '\n';
-      input.value += value;
+      input.value += '\n';
       return;
     }
 
     // if  Ctrl / Alt keyboard
     if (e.keyCode === 18 || e.keyCode === 17 || e.keyCode === 91) {
-      const value = '';
-      input.value += value;
+      input.value += '';
       return;
     }
 
@@ -190,8 +187,7 @@ document.addEventListener('keydown', (e) => {
       } else {
         updateKeys();
       }
-      const value = '';
-      input.value += value;
+      input.value += '';
       return;
     }
 
@@ -199,12 +195,11 @@ document.addEventListener('keydown', (e) => {
     if (e.keyCode === 20) {
       const activeCaps = document.getElementById('20');
       if (cups === false) {
-        activeCaps.classList.add('etherColor');
+        activeCaps.classList.add('otherColor');
       } else {
-        activeCaps.classList.remove('etherColor');
+        activeCaps.classList.remove('otherColor');
       }
-      const value = '';
-      input.value += value;
+      input.value += '';
       return;
     }
 
@@ -224,8 +219,13 @@ document.addEventListener('keyup', (e) => {
       const alt = document.getElementById('18');
 
       if ((e.keyCode === 18 && ctrl.className === 'button pressed') || (e.keyCode === 17 && alt.className === 'button pressed')) {
-        switchLang();
-        updateKeys();
+        if (cups) {
+          switchLang();
+          shiftUpdateKeys();
+        } else {
+          switchLang();
+          updateKeys();
+        }
       }
       return;
     }
